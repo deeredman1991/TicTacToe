@@ -1,0 +1,155 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+	<head>
+		<title>Javascript</title>
+		<script>
+			GetRandButton = function ()
+			{
+				return document.getElementById( "Button " +
+					Math.floor(Math.random() * 3) + " " +
+					Math.floor(Math.random() * 3));
+			}
+			WinCheck = function ()
+			{
+				if (moves > 4 && moves <= 9)
+				{
+					//Check Player
+					for (i = 0; i <= 2; i++){
+						if (
+							board[0][i].id == "Player Button" && 
+							board[1][i].id == "Player Button" && 
+							board[2][i].id == "Player Button"
+							)
+						{
+							GameOverScreen("Player");
+						} else if (
+							board[i][0].id == "Player Button" && 
+							board[i][1].id == "Player Button" && 
+							board[i][2].id == "Player Button"
+							)
+						{
+							GameOverScreen("Player");
+						}
+
+						//Check Enemy
+						else if (
+							board[0][i].id == "Enemy Button" && 
+							board[1][i].id == "Enemy Button" && 
+							board[2][i].id == "Enemy Button"
+							)
+						{
+							GameOverScreen("Enemy");
+						} else if (
+							board[i][0].id == "Enemy Button" && 
+							board[i][1].id == "Enemy Button" && 
+							board[i][2].id == "Enemy Button"
+							)
+						{
+							GameOverScreen("Enemy");
+						}
+					}
+					//Diagonals
+					//Check Player
+					if (board[0][0].id == "Player Button" && 
+						board[1][1].id == "Player Button" && 
+						board[2][2].id == "Player Button"
+						)
+					{
+						GameOverScreen("Player");
+					} else if (
+						board[0][2].id == "Player Button" && 
+						board[1][1].id == "Player Button" && 
+						board[2][0].id == "Player Button"
+						)
+					{
+						GameOverScreen("Player");
+					} else if (
+						board[0][0].id == "Enemy Button" && 
+						board[1][1].id == "Enemy Button" && 
+						board[2][2].id == "Enemy Button"
+						)
+					{
+						GameOverScreen("Enemy");
+					} else if (
+						board[0][2].id == "Enemy Button" && 
+						board[1][1].id == "Enemy Button" && 
+						board[2][0].id == "Enemy Button"
+						) 
+					{
+						GameOverScreen("Enemy");
+					}
+				} else if (moves >= 10){
+					GameOverScreen("Nobody");
+				}
+			}
+			GameOverScreen = function(winner)
+			{
+				alert( winner + " Wins!");
+				location.reload();
+				throw new Error();
+			}
+		</script>
+	</head>
+	<body>
+		<script>
+			document.write("Hello World! <br>")
+			document.write("-----------");
+			document.write("<br>");
+			var boardText = new Array(  
+				new Array (" _ "," _ "," _ "),
+				new Array (" _ "," _ "," _ "),
+				new Array (" _ "," _ "," _ ")
+				);
+			var board = new Array(
+				new Array (),
+				new Array (),
+				new Array ()
+				);
+			var moves = 0;
+			var myTurn = true;
+			//Initialize Board
+			for (y=0; y <= 2; y++){
+				for (x=0; x <= 2; x++){
+					board[x][y] = document.createElement("BUTTON");
+					board[x][y].setAttribute("id", "Button " + x.toString() + " " + y.toString());
+					board[x][y].setAttribute("x", x);
+					board[x][y].setAttribute("y", y);
+					board[x][y].tagName = "Button";
+					board[x][y].appendChild(document.createTextNode(boardText[x][y]));
+					board[x][y].addEventListener("click", function() { 
+						if (this.id != "Player Button" && this.id != "Enemy Button")
+						{
+							//Players Turn
+							if (myTurn == true)
+							{
+								this.removeChild(this.firstChild);
+								this.appendChild(document.createTextNode(" x "));
+								this.setAttribute("id", "Player Button");
+								moves++;
+								myTurn = false;
+							}
+							WinCheck();
+							//Enemy's Turn
+							if (moves < 9)
+							{
+								var enemyButton = GetRandButton();
+								while (enemyButton == null )
+								{
+									enemyButton = GetRandButton();
+								}
+								enemyButton.removeChild(enemyButton.firstChild);
+								enemyButton.appendChild(document.createTextNode(" o "));
+								enemyButton.setAttribute("id", "Enemy Button");
+								moves++;
+								myTurn = true;
+							} else { moves++; }
+							WinCheck();
+						}
+					}, false);
+					document.body.appendChild(board[x][y]);
+				}
+				document.write("<br>");
+			}
+		</script>
+	</body>
+</html>
